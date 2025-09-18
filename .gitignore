@@ -31,3 +31,15 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*.log
+replay_pid*.log
