@@ -14,21 +14,42 @@ import com.michelegrieco.taskly.repository.TaskRepository;
 public class TaskService {
 
     @Autowired
+    /** Task repository for database operations. */
     private TaskRepository taskRepository;
 
+    /**
+     * Get all tasks.
+     * @return List of tasks.
+     */
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
+    /**
+     * Get a task by its ID.
+     * @param id Task ID.
+     * @return Optional containing the task if found, or empty if not found.
+     */
     public Optional<Task> getTaskById(Long id) {
         return taskRepository.findById(id);
     }
 
+    /**
+     * Create a new task.
+     * @param task Task to be created.
+     * @return Created task.
+     */
     public Task createTask(Task task) {
         task.setCreatedAt(LocalDateTime.now());
         return taskRepository.save(task);
     }
 
+    /**
+     * Update an existing task.
+     * @param id Task ID.
+     * @param updatedTask Task data to update.
+     * @return Optional containing the updated task if found, or empty if not found.
+     */
     public Optional<Task> updateTask(Long id, Task updatedTask) {
         return taskRepository.findById(id).map(task -> {
             task.setTitle(updatedTask.getTitle());
@@ -38,6 +59,11 @@ public class TaskService {
         });
     }
 
+    /**
+     * Delete a task by its ID.
+     * @param id Task ID.
+     * @return true if the task was deleted, false if not found.
+     */
     public boolean deleteTask(Long id) {
         if (taskRepository.existsById(id)) {
             taskRepository.deleteById(id);
