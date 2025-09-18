@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.michelegrieco.taskly.model.Task;
 import com.michelegrieco.taskly.service.TaskService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
@@ -51,7 +53,7 @@ public class TaskController {
      * @param task Task to be created.
      * @return Created task.
      */
-    public Task createTask(@RequestBody Task task) {
+    public Task createTask(@Valid @RequestBody Task task) {
         return taskService.createTask(task);
     }
 
@@ -62,7 +64,7 @@ public class TaskController {
      * @param updatedTask Updated task data.
      * @return Updated task or 404 if not found.
      */
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task updatedTask) {
         return taskService.updateTask(id, updatedTask)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
