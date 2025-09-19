@@ -35,6 +35,18 @@ function App() {
     }
   };
 
+  const handleDelete = async (id) => {
+    const response = await fetch(`/tasks/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      setTask(tasks.filter(task => task.id !== id));
+    } else {
+      console.error('Failed to delete task.');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newTask = {
@@ -86,7 +98,10 @@ function App() {
               <strong>{task.title}</strong>: {task.description}
             </span>
             <button onClick={() => toggleCompleted(task.id, task.completed)}>
-              {task.completed ? 'Delete' : 'Complete'}
+              {task.completed ? 'Cancel' : 'Complete'}
+            </button>
+            <button onClick={() => handleDelete(task.id)} style={{ marginLeft: '10px' }}>
+              Delete
             </button>
           </li>
         ))}
