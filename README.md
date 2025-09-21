@@ -1,6 +1,6 @@
 # Taskly
 
-A simple and efficient task management application written in Java, CSS and JavaScript using Spring Boot and React.
+A simple and efficient task management application written in Java, CSS and JavaScript using Spring Boot, React and Tailwind.
 
 ## Description
 
