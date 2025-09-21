@@ -2,22 +2,23 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  const [tasks, setTask] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+  // Fetch tasks from the backend API when the component mounts
   useEffect(() => {
     fetch('/tasks')
       .then(response => response.json())
-      .then(data => setTask(data))
+      .then(data => setTasks(data))
       .catch(error => console.error('Error fetching tasks:', error));
-  }, []); // Empty dependency array to run only once on mount
+  }, []);
 
   const toggleCompleted = async (id, currentStatus) => {
     const updatedTask = tasks.find(task => task.id === id);
     updatedTask.completed = !currentStatus;
 
-    const response = await fetch(`/tasks/${id}`, { // Backtick for template literal `
+    const response = await fetch(`/tasks/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -26,10 +27,10 @@ function App() {
     });
 
     if (response.ok) {
-      const updatedTasks = tasks.map(task =>
+      const updatedTasks = tasks.map(task => 
         task.id === id ? { ...task, completed: !currentStatus } : task
       );
-      setTask(updatedTasks);
+      setTasks(updatedTasks);
     } else {
       console.error('Failed to update task.');
     }
@@ -41,7 +42,7 @@ function App() {
     });
 
     if (response.ok) {
-      setTask(tasks.filter(task => task.id !== id));
+      setTasks(tasks.filter(task => task.id !== id));
     } else {
       console.error('Failed to delete task.');
     }
@@ -65,7 +66,7 @@ function App() {
 
     if (response.ok) {
       const createdTask = await response.json();
-      setTask([...tasks, createdTask]);
+      setTasks([...tasks, createdTask]);
       setTitle('');
       setDescription('');
     } else {
@@ -74,38 +75,56 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Taskly</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder='Add a new task'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder='Add a description'
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button type="submit">Add</button>
-      </form>
-      <ul>
-        {tasks.map(task => (
-          <li key={task.id}>
-            <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-              <strong>{task.title}</strong>: {task.description}
-            </span>
-            <button onClick={() => toggleCompleted(task.id, task.completed)}>
-              {task.completed ? 'Cancel' : 'Complete'}
-            </button>
-            <button onClick={() => handleDelete(task.id)} style={{ marginLeft: '10px' }}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <h1 className="text-4xl font-bold text-gray-800 mb-8">Taskly</h1>
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-2 mb-4">
+          <input
+            type="text"
+            placeholder='Add a new task'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="text"
+            placeholder='Add a description'
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300"
+          >
+            Add
+          </button>
+        </form>
+        <ul className="space-y-4">
+          {tasks.map(task => (
+            <li key={task.id} className="flex justify-between items-center bg-gray-50 p-4 rounded-md shadow-sm">
+              <span className={task.completed ? 'line-through text-gray-500' : 'text-gray-800'}>
+                <strong className="block text-lg font-semibold">{task.title}</strong>
+                <span className="block text-sm text-gray-600">{task.description}</span>
+              </span>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => toggleCompleted(task.id, task.completed)}
+                  className="text-sm bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-300"
+                >
+                  {task.completed ? 'Undo' : 'Complete'}
+                </button>
+                <button
+                  onClick={() => handleDelete(task.id)}
+                  className="text-sm bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-300"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
