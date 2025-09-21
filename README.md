@@ -1,6 +1,6 @@
 # Taskly
 
-A simple and efficient task management application written in Java/JavaScript using Spring Boot and React.
+A simple and efficient task management application written in Java, CSS and JavaScript using Spring Boot, React and Tailwind.
 
 ## Description
 
@@ -37,6 +37,7 @@ Taskly helps you organize and manage your daily tasks with ease. Keep track of y
 4. In a new terminal, start the frontend development server
    ```bash
    cd taskly-frontend
+   npm install
    npm start
    ```
 
@@ -68,10 +69,11 @@ Backend:
 - Java
 - Spring Boot
 - JPA/Hibernate
-- H2 Database (for development)
+- H2 Database (for development, to be eventually replaced with PostgreSQL)
 
 Frontend:
 - React
+- Tailwindcss
 
 ## Project Structure
 

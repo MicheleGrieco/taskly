@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import TaskForm from './components/TaskForm';
+import TaskList from './components/TaskList';
 import './App.css';
 
 function App() {
-  const [tasks, setTask] = useState([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     fetch('/tasks')
       .then(response => response.json())
-      .then(data => setTask(data))
+      .then(data => setTasks(data))
       .catch(error => console.error('Error fetching tasks:', error));
-  }, []); // Empty dependency array to run only once on mount
+  }, []);
 
-  const toggleCompleted = async (id, currentStatus) => {
+  const handleAdd = (newTask) => {
+    setTasks([...tasks, newTask]);
+  };
+
+  const handleToggle = async (id, currentStatus) => {
     const updatedTask = tasks.find(task => task.id === id);
     updatedTask.completed = !currentStatus;
 
-    const response = await fetch(`/tasks/${id}`, { // Backtick for template literal `
+    const response = await fetch(`/tasks/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -26,10 +30,10 @@ function App() {
     });
 
     if (response.ok) {
-      const updatedTasks = tasks.map(task =>
+      const updatedTasks = tasks.map(task => 
         task.id === id ? { ...task, completed: !currentStatus } : task
       );
-      setTask(updatedTasks);
+      setTasks(updatedTasks);
     } else {
       console.error('Failed to update task.');
     }
@@ -41,71 +45,23 @@ function App() {
     });
 
     if (response.ok) {
-      setTask(tasks.filter(task => task.id !== id));
+      setTasks(tasks.filter(task => task.id !== id));
     } else {
       console.error('Failed to delete task.');
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newTask = {
-      title,
-      description,
-      completed: false
-    };
-
-    const response = await fetch('/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newTask),
-    });
-
-    if (response.ok) {
-      const createdTask = await response.json();
-      setTask([...tasks, createdTask]);
-      setTitle('');
-      setDescription('');
-    } else {
-      console.error('Failed to create task.');
-    }
-  };
-
   return (
-    <div className="App">
-      <h1>Taskly</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder='Add a new task'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <h1 className="text-4xl font-bold text-gray-800 mb-8">Taskly</h1>
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+        <TaskForm onTaskAdded={handleAdd} />
+        <TaskList 
+          tasks={tasks} 
+          onToggleCompleted={handleToggle} 
+          onDelete={handleDelete} 
         />
-        <input
-          type="text"
-          placeholder='Add a description'
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button type="submit">Add</button>
-      </form>
-      <ul>
-        {tasks.map(task => (
-          <li key={task.id}>
-            <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-              <strong>{task.title}</strong>: {task.description}
-            </span>
-            <button onClick={() => toggleCompleted(task.id, task.completed)}>
-              {task.completed ? 'Cancel' : 'Complete'}
-            </button>
-            <button onClick={() => handleDelete(task.id)} style={{ marginLeft: '10px' }}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+      </div>
     </div>
   );
 }
