@@ -27,8 +27,8 @@ public class SecurityConfig {
      */
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/h2-console/**").permitAll()
-            .anyRequest().permitAll() // Allow all other requests
+                .requestMatchers("/h2-console/**").permitAll()
+                .anyRequest().permitAll() // Allow all other requests
             )
             .formLogin(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())
