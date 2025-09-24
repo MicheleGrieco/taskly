@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -29,9 +27,6 @@ public class Task {
     private boolean completed;
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
-    private User user; // Association Task to User
 
     @PrePersist
     protected void onCreate() {
@@ -52,6 +47,4 @@ public class Task {
     public void setCompleted(boolean completed) { this.completed = completed; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
 }

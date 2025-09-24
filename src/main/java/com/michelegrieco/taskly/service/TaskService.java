@@ -15,7 +15,11 @@ public class TaskService {
 
     @Autowired
     /** Task repository for database operations. */
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
+
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     /**
      * Get all tasks.
