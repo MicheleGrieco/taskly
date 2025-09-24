@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
+import Footer from './components/Footer';
+import './index.css';
 import './App.css';
 
 function App() {
@@ -53,7 +55,7 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8">Taskly</h1>
+      <h1 className="text-5xl font-extrabold text-blue-600 mb-8 transition-transform transform duration-300 ease-in-out hover:scale-110 hover:drop-shadow-lg cursor-pointer">Taskly</h1>
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
         <TaskForm onTaskAdded={handleAdd} />
         <TaskList 
@@ -62,6 +64,7 @@ function App() {
           onDelete={handleDelete} 
         />
       </div>
+      <Footer />
     </div>
   );
 }
