@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
+import Footer from './components/Footer';
+import './index.css';
 import './App.css';
 
 function App() {
@@ -62,6 +64,7 @@ function App() {
           onDelete={handleDelete} 
         />
       </div>
+      <Footer />
     </div>
   );
 }
