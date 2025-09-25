@@ -45,10 +45,8 @@ public class TaskController {
      * @return Task with the specified ID or 404 if not found.
      */
     public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
-        return taskService.getTaskById(id)
-        .map(TaskMapper::toDTO)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+        Task task = taskService.getTaskById(id); // Throws TaskNotFoundException if not found
+        return ResponseEntity.ok(TaskMapper.toDTO(task));
     }
 
     @PostMapping
@@ -72,10 +70,8 @@ public class TaskController {
      */
     public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @Valid @RequestBody TaskDTO updatedTaskDTO) {
         Task updatedTask = TaskMapper.toEntity(updatedTaskDTO);
-        return taskService.updateTask(id, updatedTask)
-            .map(TaskMapper::toDTO)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+        Task result = taskService.updateTask(id, updatedTask);
+        return ResponseEntity.ok(TaskMapper.toDTO(result));
     }
 
     @DeleteMapping("/{id}")

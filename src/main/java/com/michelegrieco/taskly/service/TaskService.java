@@ -2,11 +2,11 @@ package com.michelegrieco.taskly.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.michelegrieco.taskly.exception.TaskNotFoundException;
 import com.michelegrieco.taskly.model.Task;
 import com.michelegrieco.taskly.repository.TaskRepository;
 
@@ -34,8 +34,9 @@ public class TaskService {
      * @param id Task ID.
      * @return Optional containing the task if found, or empty if not found.
      */
-    public Optional<Task> getTaskById(Long id) {
-        return taskRepository.findById(id);
+    public Task getTaskById(Long id) {
+        return taskRepository.findById(id)
+            .orElseThrow(() -> new TaskNotFoundException(id));
     }
 
     /**
@@ -54,13 +55,13 @@ public class TaskService {
      * @param updatedTask Task data to update.
      * @return Optional containing the updated task if found, or empty if not found.
      */
-    public Optional<Task> updateTask(Long id, Task updatedTask) {
-        return taskRepository.findById(id).map(task -> {
-            task.setTitle(updatedTask.getTitle());
-            task.setDescription(updatedTask.getDescription());
-            task.setCompleted(updatedTask.isCompleted());
-            return taskRepository.save(task);
-        });
+    public Task updateTask(Long id, Task updatedTask) {
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> new TaskNotFoundException(id));
+        task.setTitle(updatedTask.getTitle());
+        task.setDescription(updatedTask.getDescription());
+        task.setCompleted(updatedTask.isCompleted());
+        return taskRepository.save(task);
     }
 
     /**
