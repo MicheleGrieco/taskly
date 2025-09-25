@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.michelegrieco.taskly.dto.TaskDTO;
+import com.michelegrieco.taskly.dto.TaskMapper;
 import com.michelegrieco.taskly.model.Task;
 import com.michelegrieco.taskly.service.TaskService;
 
@@ -31,8 +33,9 @@ public class TaskController {
      * Retrieve all tasks.
      * @return List of all tasks.
      */
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    public List<TaskDTO> getAllTasks() {
+        return taskService.getAllTasks()
+            .stream().map(TaskMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
@@ -41,8 +44,9 @@ public class TaskController {
      * @param id Task ID.
      * @return Task with the specified ID or 404 if not found.
      */
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id)
+        .map(TaskMapper::toDTO)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
     }
@@ -53,8 +57,10 @@ public class TaskController {
      * @param task Task to be created.
      * @return Created task.
      */
-    public Task createTask(@Valid @RequestBody Task task) {
-        return taskService.createTask(task);
+    public TaskDTO createTask(@Valid @RequestBody TaskDTO taskDTO) {
+        Task task = TaskMapper.toEntity(taskDTO);
+        Task created = taskService.createTask(task);
+        return TaskMapper.toDTO(created);
     }
 
     @PutMapping("/{id}")
@@ -64,8 +70,10 @@ public class TaskController {
      * @param updatedTask Updated task data.
      * @return Updated task or 404 if not found.
      */
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task updatedTask) {
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @Valid @RequestBody TaskDTO updatedTaskDTO) {
+        Task updatedTask = TaskMapper.toEntity(updatedTaskDTO);
         return taskService.updateTask(id, updatedTask)
+            .map(TaskMapper::toDTO)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
