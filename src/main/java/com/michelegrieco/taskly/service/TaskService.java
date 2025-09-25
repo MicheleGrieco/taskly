@@ -2,7 +2,6 @@ package com.michelegrieco.taskly.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,13 +55,13 @@ public class TaskService {
      * @param updatedTask Task data to update.
      * @return Optional containing the updated task if found, or empty if not found.
      */
-    public Optional<Task> updateTask(Long id, Task updatedTask) {
-        return taskRepository.findById(id).map(task -> {
-            task.setTitle(updatedTask.getTitle());
-            task.setDescription(updatedTask.getDescription());
-            task.setCompleted(updatedTask.isCompleted());
-            return taskRepository.save(task);
-        });
+    public Task updateTask(Long id, Task updatedTask) {
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> new TaskNotFoundException(id));
+        task.setTitle(updatedTask.getTitle());
+        task.setDescription(updatedTask.getDescription());
+        task.setCompleted(updatedTask.isCompleted());
+        return taskRepository.save(task);
     }
 
     /**
