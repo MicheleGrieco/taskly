@@ -54,4 +54,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAllExceptions(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    /**
+     * Handle UserNotFoundException and return a NOT_FOUND response.
+     * @param ex The UserNotFoundException instance.
+     * @return A ResponseEntity containing the exception message and a NOT_FOUND status.
+     */
+    public ResponseEntity<String> handleUserNotFoundExcception(UserNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
