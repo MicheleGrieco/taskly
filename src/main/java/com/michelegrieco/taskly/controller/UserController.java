@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.michelegrieco.taskly.dto.UserDTO;
+import com.michelegrieco.taskly.dto.UserMapper;
 import com.michelegrieco.taskly.model.User;
 import com.michelegrieco.taskly.service.UserService;
 
@@ -20,12 +21,10 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword());
-        user.setRoles(userDTO.getRoles());
-        userService.registerUser(user);
-        userDTO.setPassword(null); // Skip password
+        User user = UserMapper.toEntity(userDTO);
+        User saved = userService.registerUser(user);
+        UserDTO responseDTO = UserMapper.toDTO(saved);
+        responseDTO.setPassword(null); // Skip password
         return ResponseEntity.ok(userDTO);
     }
 }
