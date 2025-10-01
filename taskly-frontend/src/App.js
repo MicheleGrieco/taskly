@@ -4,6 +4,7 @@ import TaskList from './components/TaskList';
 import Footer from './components/Footer';
 import './index.css';
 import './App.css';
+import RegisterForm from './components/RegisterForm';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -64,6 +65,7 @@ function App() {
           onDelete={handleDelete} 
         />
       </div>
+      <RegisterForm />
       <Footer />
     </div>
   );
