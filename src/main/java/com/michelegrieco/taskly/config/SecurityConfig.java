@@ -17,27 +17,27 @@ public class SecurityConfig {
     /**
      * Configure security filter chain.
      * Allow access to H2 console and permit all other requests.
-     * @param http
-     * @return
+     * @param http HttpSecurity object to configure.
+     * @return SecurityFilterChain object with configured settings.
      * @throws Exception
      */
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 console
                 .anyRequest().permitAll() // Allow all other requests
             )
-            .formLogin(Customizer.withDefaults())
-            .httpBasic(Customizer.withDefaults())
+            .formLogin(Customizer.withDefaults()) // Enable form-based login
+            .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic authentication
             .csrf(crsf -> crsf.disable()) // Disable CSRF for H2 console access
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())); // Allow H2 console to be displayed in a frame
 
-        return http.build();
+        return http.build(); // Build and return the SecurityFilterChain
     }
 
     @Bean
     /**
      * Password encoder bean using BCrypt.
-     * @return
+     * @return PasswordEncoder instance.
      */
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
